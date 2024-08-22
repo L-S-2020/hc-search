@@ -23,7 +23,16 @@ client = SocketModeClient(
 #collection_search = client.get_or_create_collection(name="search")
 
 def listener(client: SocketModeClient, req: SocketModeRequest):
-    print(req)
+    print(req.type)
+    if req.type == 'slash_commands':
+        response = SocketModeResponse(envelope_id=req.envelope_id)
+        client.send_socket_mode_response(response)
+
+        if req.payload['command'] == '/hc-search':
+            print('search')
+            #collection_search.insert_one({'user_id': req.payload['user_id'], 'text': req.payload['text']})
+            #client.web_client.chat_postMessage(channel=req.payload['channel_id'], text='Searching...')
+
 
 client.socket_mode_request_listeners.append(listener)
 client.connect()
