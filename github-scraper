@@ -9,12 +9,17 @@ from github import GithubIntegration
 import chromadb
 
 import markdown
+import semchunk
+from bs4 import BeautifulSoup
 
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
 GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
+CHUNK_SIZE = 1000
+
+chunker = semchunk.chunkerify(lambda text: len(text), CHUNK_SIZE)
 
 # initialize Chroma db client
 #chroma_client = chromadb.HttpClient()
@@ -24,7 +29,14 @@ collection_search = chroma_client.get_or_create_collection(name="search")
 auth = Auth.Token(GITHUB_TOKEN)
 g = Github(auth=auth)
 
+exclude_characters = ['\\\n', '\\n', '\n', "b'#", '#',]
+
+
+
 def scrape_repo(Reponsitory):
+    documents = []
+    metadata = []
+    ids = []
     title = Reponsitory.full_name
     description = Reponsitory.description
     content = repo.get_contents("")
@@ -36,7 +48,12 @@ def scrape_repo(Reponsitory):
             if file.path.endswith('.md'):
                 md_text = file.decoded_content
                 html_text = markdown.markdown(md_text)
-                print(html_text)
+                soup = BeautifulSoup(html_text, 'html.parser')
+                chunks = chunker(soup.get_text())
+                for chunk in chunks:
+                    for character in exclude_characters:
+                        chunk = chunk.replace(character, ' ')
+
 
 
 
