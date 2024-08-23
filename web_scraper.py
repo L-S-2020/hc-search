@@ -17,6 +17,7 @@ collection_search = chroma_client.get_or_create_collection(name="search")
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 driver.implicitly_wait(5)
 
+CHUNK_SIZE = 1000
 exclude_characters = ['\\\n', '\\n', '\n', "b'#", '#',]
 chunker = semchunk.chunkerify(lambda text: len(text), CHUNK_SIZE)
 
