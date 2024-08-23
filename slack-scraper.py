@@ -38,13 +38,14 @@ def scrape_channel(channel_id):
     added_threads = []
     for message in messages:
         # skip message if subtype in excluded subtypes or already added
-        if message.get('subtype') in excluded_subtypes or message['ts'] in ids:
+        new_id = str(channel_id) + str(message['ts'])
+        if message.get('subtype') in excluded_subtypes or new_id in ids:
             continue
         print(message)
         # add message data to list
         documents.append(message['text'])
-        metadata.append({'ts': message['ts'], 'channel': channel_id})
-        ids.append(message['ts'])
+        metadata.append({'type': 'slack','ts': message['ts'], 'channel': channel_id})
+        ids.append(new_id)
         # get replies if message has a thread (with pagination)
         if message.get('reply_count') and message.get('thread_ts') not in added_threads:
             response = client.conversations_replies(channel=channel_id, ts=message['thread_ts'])

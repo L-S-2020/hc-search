@@ -51,9 +51,14 @@ def scrape_repo(Reponsitory):
                 soup = BeautifulSoup(html_text, 'html.parser')
                 chunks = chunker(soup.get_text())
                 for chunk in chunks:
+                    item = chunks.index(chunk)
                     for character in exclude_characters:
                         chunk = chunk.replace(character, ' ')
-
+                    documents.append(chunk)
+                    metadata.append({'type': 'github','repo': title, 'file': file.path, 'url': file.html_url})
+                    ids.append(title + file.path + str(item))
+    collection_search.upsert(documents=documents, metadatas=metadata, ids=ids)
+    print('scraped: ' + title)
 
 
 
