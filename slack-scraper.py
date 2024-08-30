@@ -15,6 +15,8 @@ SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
 # initialize Slack Web client
 client = WebClient(token=os.environ["SLACK_BOT_TOKEN"])
 
+search_channels = ['C07G0TYHAGP']
+
 # initialize Chroma db client
 #chroma_client = chromadb.HttpClient()
 chroma_client = chromadb.PersistentClient(path="db")
@@ -58,7 +60,8 @@ def scrape_channel(channel_id):
     # embed messages in vector db
     collection_search.upsert(documents=documents, metadatas=metadata, ids=ids)
 
-scrape_channel('C07G0TYHAGP')
+for channel in search_channels:
+    scrape_channel(channel)
 
 results = collection_search.query(query_texts=["test response",], n_results=5)
 print(results)
