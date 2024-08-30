@@ -68,7 +68,7 @@ def scrape_repo(Reponsitory):
                     for character in exclude_characters:
                         chunk = chunk.replace(character, ' ')
                     documents.append(chunk)
-                    metadata.append({'type': 'github','repo': title, 'file': file.path, 'url': file.html_url})
+                    metadata.append({'type': 'github','title': title, 'file': file.path, 'url': file.html_url})
                     ids.append(title + file.path + str(item))
     # add to chroma db
     collection_search.upsert(documents=documents, metadatas=metadata, ids=ids)

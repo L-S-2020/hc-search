@@ -68,7 +68,7 @@ while waitlist != []:
             for character in exclude_characters:
                 chunk = chunk.replace(character, ' ')
             content.append(chunk)
-            metadata.append({"type": 'website', "url": current, "name": title})
+            metadata.append({"type": 'website', "url": current, "title": title})
             ids.append(current + str(item))
         # add the scraped data to the chroma db
         collection_search.add(
