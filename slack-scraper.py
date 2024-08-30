@@ -19,8 +19,8 @@ client = WebClient(token=os.environ["SLACK_BOT_TOKEN"])
 search_channels = ['C07G0TYHAGP']
 
 # initialize Chroma db client
-chroma_client = chromadb.HttpClient()
-#chroma_client = chromadb.PersistentClient(path="db")
+#chroma_client = chromadb.HttpClient()
+chroma_client = chromadb.PersistentClient(path="db")
 collection_search = chroma_client.get_or_create_collection(name="search")
 
 # Message subtypes that should be excluded from the database

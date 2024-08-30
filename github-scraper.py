@@ -25,8 +25,8 @@ CHUNK_SIZE = 1000
 chunker = semchunk.chunkerify(lambda text: len(text), CHUNK_SIZE)
 
 # initialize Chroma db client
-chroma_client = chromadb.HttpClient()
-#chroma_client = chromadb.PersistentClient(path="db")
+#chroma_client = chromadb.HttpClient()
+chroma_client = chromadb.PersistentClient(path="db")
 collection_search = chroma_client.get_or_create_collection(name="search")
 
 # login to Github
