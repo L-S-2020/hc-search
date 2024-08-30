@@ -15,11 +15,12 @@ SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
 # initialize Slack Web client
 client = WebClient(token=os.environ["SLACK_BOT_TOKEN"])
 
+# define the channels to scrape
 search_channels = ['C07G0TYHAGP']
 
 # initialize Chroma db client
-#chroma_client = chromadb.HttpClient()
-chroma_client = chromadb.PersistentClient(path="db")
+chroma_client = chromadb.HttpClient()
+#chroma_client = chromadb.PersistentClient(path="db")
 collection_search = chroma_client.get_or_create_collection(name="search")
 
 # Message subtypes that should be excluded from the database
@@ -60,10 +61,6 @@ def scrape_channel(channel_id):
     # embed messages in vector db
     collection_search.upsert(documents=documents, metadatas=metadata, ids=ids)
 
+# scrape all channels in search_channels
 for channel in search_channels:
     scrape_channel(channel)
-
-results = collection_search.query(query_texts=["test response",], n_results=5)
-print(results)
-#print(collection_search.peek())
-#print(collection_search.count())

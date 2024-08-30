@@ -28,8 +28,8 @@ client = SocketModeClient(
 )
 
 # initialize Chroma db client
-#chroma_client = chromadb.HttpClient()
-chroma_client = chromadb.PersistentClient(path="db")
+chroma_client = chromadb.HttpClient()
+#chroma_client = chromadb.PersistentClient(path="db")
 collection_search = chroma_client.get_or_create_collection(name="search")
 
 # define listener function
@@ -42,6 +42,8 @@ def listener(client: SocketModeClient, req: SocketModeRequest):
         
         # respond to /hc-search
         if req.payload['command'] == '/hc-search':
+            # log the request
+            logging.info(f"Search request from {req.payload['user_id']} in {req.payload['channel_id']} for {req.payload['text']}")
             # search in chroma db
             results = collection_search.query(query_texts=[req.payload['text'],], n_results=3)
             # add links to slack messages
